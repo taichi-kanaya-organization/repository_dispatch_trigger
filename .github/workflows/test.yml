@@ -7,10 +7,16 @@ jobs:
     environment:
         name: dev
     steps:
+      - name: Get token
+        id: get_token
+        uses: tibdex/github-app-token@v1
+        with:
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          app_id: ${{ secrets.APP_ID }}
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
-            token: ${{ secrets.PAT }}
+            token: ${{ steps.get_token.outputs.token }}]
             repository: taichi-kanaya-organization/repository_dispatch
             event-type: my-event
             client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
